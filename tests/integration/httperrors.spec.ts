@@ -5,13 +5,16 @@ import { LocalVueType, prepareVue } from '../helper/prepare';
 let localVue: LocalVueType;
 const options = {
   tokenDefaultName: 'auth_token',
+  refreshTokenDefaultName: 'refresh_token',
   userDefaultName: 'auth_user',
   tokenType: 'Bearer',
   rolesVar: 'roles',
   vuexStoreSpace: 'vue-auth',
   tokenStore: ['vuex', 'localStorage', 'sessionStorage', 'cookie'],
   headerTokenReplace: '{auth_token}',
+  headerRefreshTokenReplace: '{refresh_token}',
   authRedirect: '/login',
+  refreshHeaderToken: 'RefreshTokenAuth',
   loginData: {
     url: '/auth/login',
     method: 'POST',

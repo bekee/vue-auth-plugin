@@ -18,6 +18,10 @@ export default class StoreLocalStorage extends VueAuthStore {
     return this.store.getItem(this.options.tokenDefaultName);
   }
 
+  public getRefreshToken(): string {
+    return this.store.getItem(this.options.refreshTokenDefaultName);
+  }
+
   public getUser(): AuthUser {
     return JSON.parse(this.store.getItem(this.options.userDefaultName));
   }
@@ -27,6 +31,14 @@ export default class StoreLocalStorage extends VueAuthStore {
       this.store.setItem(this.options.tokenDefaultName as string, token);
     } else {
       this.store.removeItem(this.options.tokenDefaultName);
+    }
+  }
+
+  public setRefreshToken(refreshToken: string | null): void {
+    if (refreshToken) {
+      this.store.setItem(this.options.refreshTokenDefaultName as string, refreshToken);
+    } else {
+      this.store.removeItem(this.options.refreshTokenDefaultName);
     }
   }
 

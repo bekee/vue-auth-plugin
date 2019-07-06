@@ -17,6 +17,9 @@ export default class AuthStoreManager extends VueAuthStore {
     this.options.Vue.$watch('token', (value) => {
       this.setToken(value);
     });
+    this.options.Vue.$watch('refreshToken', (value) => {
+      this.setRefreshToken(value);
+    });
   }
 
   public get allStores() {
@@ -53,6 +56,12 @@ export default class AuthStoreManager extends VueAuthStore {
       .filter((token) => !!token)[0];
     return token || this.options.Vue.$data.token;
   }
+  public getRefreshToken(): string {
+    const refreshToken = this.allStores
+      .map((store) => store.getRefreshToken())
+      .filter((refreshToken) => !!refreshToken)[0];
+    return refreshToken || this.options.Vue.$data.refreshToken;
+  }
 
   public getUser(): AuthUser {
     const user = this.allStores
@@ -67,6 +76,14 @@ export default class AuthStoreManager extends VueAuthStore {
         store.setToken(token);
       });
     this.options.Vue.$data.token = token;
+  }
+
+  public setRefreshToken(refreshToken: string | null): void {
+    this.allStores
+      .forEach((store) => {
+        store.setRefreshToken(refreshToken);
+      });
+    this.options.Vue.$data.refreshToken = refreshToken;
   }
 
   public setUser(user: AuthUser | null): void {

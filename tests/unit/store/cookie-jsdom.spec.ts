@@ -28,7 +28,10 @@ describe('Cookie store', () => {
     vue = createLocalVue();
     options = {
       tokenDefaultName: 'token_cookie',
+      refreshTokenDefaultName: 'refresh_cookie',
       userDefaultName: 'user_cookie',
+      refreshHeaderToken: 'RefreshTokenAuth',
+      headerRefreshTokenReplace: '{refresh_token}',
       rolesVar: 'roles',
       Vue: vue as any,
     };
@@ -65,6 +68,12 @@ describe('Cookie store', () => {
       expect(Cookies.get(options.userDefaultName)).toBeUndefined();
       expect(storeCookie.getToken()).toEqual(token);
     });
+    it('Set Refresh Token', () => {
+      storeCookie.setRefreshToken(token);
+      expect(Cookies.get(options.refreshTokenDefaultName)).toEqual(JSON.stringify(token));
+      expect(Cookies.get(options.userDefaultName)).toBeUndefined();
+      expect(storeCookie.getRefreshToken()).toEqual(token);
+    });
     it('Remove User', () => {
       storeCookie.setUser(user);
       storeCookie.setUser(null);
@@ -77,6 +86,13 @@ describe('Cookie store', () => {
       storeCookie.setToken(null);
       expect(Cookies.get(options.tokenDefaultName)).toBeUndefined();
       expect(storeCookie.getToken()).toBeUndefined();
+    });
+
+    it('Remove Refresh Token', () => {
+      storeCookie.setRefreshToken(token);
+      storeCookie.setRefreshToken(null);
+      expect(Cookies.get(options.refreshTokenDefaultName)).toBeUndefined();
+      expect(storeCookie.getRefreshToken()).toBeUndefined();
     });
   });
   describe('Using document.cookie', () => {
@@ -98,6 +114,12 @@ describe('Cookie store', () => {
       expect(Cookies.get(options.userDefaultName)).toBeUndefined();
       expect(storeCookie.getToken()).toEqual(token);
     });
+    it('Set Refresh Token', () => {
+      storeCookie.setRefreshToken(token);
+      expect(Cookies.get(options.refreshTokenDefaultName)).toEqual(token);
+      expect(Cookies.get(options.userDefaultName)).toBeUndefined();
+      expect(storeCookie.getRefreshToken()).toEqual(token);
+    });
     it('Remove User', () => {
       storeCookie.setUser(user);
       storeCookie.setUser(null);
@@ -110,6 +132,12 @@ describe('Cookie store', () => {
       storeCookie.setToken(null);
       expect(Cookies.get(options.tokenDefaultName)).toEqual('');
       expect(storeCookie.getToken()).toBeNull();
+    });
+    it('Remove Refresh Token', () => {
+      storeCookie.setRefreshToken(token);
+      storeCookie.setRefreshToken(null);
+      expect(Cookies.get(options.refreshTokenDefaultName)).toEqual('');
+      expect(storeCookie.getRefreshToken()).toBeNull();
     });
   });
 });

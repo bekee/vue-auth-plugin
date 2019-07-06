@@ -37,6 +37,7 @@ export default class AuthVueHttp {
       .then(async (response: AxiosResponse) => {
         const { headers } = response;
         this.extractToken(headers);
+        this.extractRefreshToken(headers);
         this.startIntervals();
         if (fetchUser) {
           await this.fetchData(true);
@@ -99,17 +100,18 @@ export default class AuthVueHttp {
   public refresh(force = false) {
     const refresh = this.options.refreshData && typeof this.options.refreshData === 'object' &&
     Object.keys(this.options.refreshData).length ? this.options.refreshData : {};
-    const { enabled, method, url } = refresh;
-    if ((enabled || force) && url && method && this.storeManager.getToken()) {
+    const { url, enabled, method } = refresh;
+    if ((enabled || force) && url && method && this.storeManager.getToken() ) {
       const promise = this.http({
         method,
         url,
-        headers: { ...this.getAuthHeader() },
+        headers: { ...this.getAuthHeader(), ...this.getRefreshAuthHeader() },
       });
       promise
         .then(async (response: AxiosResponse) => {
           const { headers } = response;
           this.extractToken(headers);
+          this.extractRefreshToken(headers);
           return response;
         })
         .catch((error: Error) => {
@@ -188,11 +190,29 @@ export default class AuthVueHttp {
     this.storeManager.setToken(token.trim());
   }
 
+  private extractRefreshToken(headers: { [head: string]: string }) {
+    if (!this.options.refreshData) {
+      return;
+    }
+    const { refreshHeaderToken } = this.options;
+    const head = (headers[refreshHeaderToken.toLowerCase()] || '').split(' ');
+    const token = head[1] || head[0];
+    this.storeManager.setRefreshToken(token.trim());
+  }
+
   private getAuthHeader() {
     const { headerToken } = this.options.loginData || { headerToken: 'Authorization' };
     const { tokenType, headerTokenReplace } = this.options;
 
     const token = `${tokenType} ${headerTokenReplace}`.trim();
     return { [headerToken]: token };
+  }
+
+  private getRefreshAuthHeader() {
+    const { refreshHeaderToken } = this.options || { refreshHeaderToken: 'RefreshTokenAuth' };
+    const { refreshTokenDefaultName } = this.options;
+
+    const token = `${refreshTokenDefaultName}`.trim();
+    return { [refreshHeaderToken]: token };
   }
 }

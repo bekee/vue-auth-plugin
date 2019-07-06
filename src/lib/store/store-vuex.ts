@@ -4,6 +4,7 @@ import { IVueAuthOptions } from '../auth';
 
 export type AuthVuexState = {
   token?: string;
+  refreshToken?: string;
   user?: AuthUser;
 };
 
@@ -29,12 +30,20 @@ export default class StoreVuex extends VueAuthStore {
     return this.store.getters[`${this.module}/getToken`];
   }
 
+  public getRefreshToken(): string {
+    return this.store.getters[`${this.module}/getRefreshToken`];
+  }
+
   public getUser(): AuthUser {
     return this.store.getters[`${this.module}/getUser`];
   }
 
   public setToken(token: string | null): void {
     this.store.dispatch(`${this.module}/setToken`, token);
+  }
+
+  public setRefreshToken(refreshToken: string | null): void {
+    this.store.dispatch(`${this.module}/setRefreshToken`, refreshToken);
   }
 
   public setUser(user: AuthUser | null): void {
@@ -47,11 +56,15 @@ export default class StoreVuex extends VueAuthStore {
       namespaced: true,
       state: {
         token: this.options.Vue.$data.token,
+        refreshToken: this.options.Vue.$data.refreshToken,
         user: this.options.Vue.$data.user,
       } as AuthVuexState,
       mutations: {
         SET_TOKEN(state: AuthVuexState, token: string) {
           state.token = token;
+        },
+        SET_REFRESH_TOKEN(state: AuthVuexState, refreshToken: string) {
+          state.refreshToken = refreshToken;
         },
         SET_USER(state: AuthVuexState, user: AuthUser) {
           state.user = user;
@@ -61,6 +74,9 @@ export default class StoreVuex extends VueAuthStore {
         setToken(actionContext: ActionContext<AuthVuexState, any>, token: string) {
           actionContext.commit('SET_TOKEN', token);
         },
+        setRefreshToken(actionContext: ActionContext<AuthVuexState, any>, refreshToken: string) {
+          actionContext.commit('SET_REFRESH_TOKEN', refreshToken);
+        },
         setUser(actionContext: ActionContext<AuthVuexState, any>, user: AuthUser) {
           actionContext.commit('SET_USER', user);
         },
@@ -68,6 +84,9 @@ export default class StoreVuex extends VueAuthStore {
       getters: {
         getToken(state: AuthVuexState): string | undefined {
           return state.token;
+        },
+        getRefreshToken(state: AuthVuexState): string | undefined {
+          return state.refreshToken;
         },
         getUser(state: AuthVuexState): AuthUser | undefined {
           return state.user;

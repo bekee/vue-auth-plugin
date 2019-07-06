@@ -28,7 +28,9 @@ describe('Node environment', () => {
     vue = createLocalVue();
     options = {
       tokenDefaultName: 'token_cookie',
+      refreshTokenDefaultName: 'refresh_cookie',
       userDefaultName: 'user_cookie',
+      refreshHeaderToken: 'RefreshTokenAuth',
       rolesVar: 'roles',
       Vue: vue as any,
     };
@@ -53,6 +55,12 @@ describe('Node environment', () => {
     expect(Cookies.get(options.userDefaultName)).toBeUndefined();
     expect(storeCookie.getToken()).toBeUndefined();
   });
+  it('Set Refresh Token', () => {
+    storeCookie.setRefreshToken(token);
+    expect(Cookies.get(options.refreshTokenDefaultName)).toBeUndefined();
+    expect(Cookies.get(options.userDefaultName)).toBeUndefined();
+    expect(storeCookie.getRefreshToken()).toBeUndefined();
+  });
   it('Remove User', () => {
     storeCookie.setUser(user);
     storeCookie.setUser(null);
@@ -65,5 +73,12 @@ describe('Node environment', () => {
     storeCookie.setToken(null);
     expect(Cookies.get(options.tokenDefaultName)).toBeUndefined();
     expect(storeCookie.getToken()).toBeUndefined();
+  });
+
+  it('Remove Refresh Token', () => {
+    storeCookie.setRefreshToken(token);
+    storeCookie.setRefreshToken(null);
+    expect(Cookies.get(options.refreshTokenDefaultName)).toBeUndefined();
+    expect(storeCookie.getRefreshToken()).toBeUndefined();
   });
 });

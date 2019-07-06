@@ -13,11 +13,14 @@ export default class Auth {
     authMeta: 'auth',
     rolesVar: 'roles',
     tokenDefaultName: 'default_auth_token',
+    refreshTokenDefaultName: 'default_refresh_token',
     userDefaultName: 'default_auth_user',
     tokenStore: ['vuex', 'localStorage', 'cookie'],
     headerTokenReplace: '{auth_token}',
+    headerRefreshTokenReplace: '{head_refresh_token}',
     tokenType: 'Bearer',
     vuexStoreSpace: 'vue-auth',
+    refreshHeaderToken: 'RefreshTokenAuth',
 
     authRedirect: '/login',
 
@@ -61,6 +64,7 @@ export default class Auth {
           return {
             user: null,
             token: null,
+            refreshToken: null,
           };
         },
       }),
@@ -92,6 +96,10 @@ export default class Auth {
 
   public token() {
     return this.storeManager.getToken();
+  }
+
+  public refrehToken() {
+    return this.storeManager.getRefreshToken();
   }
 
   public fetchUser() {

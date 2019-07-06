@@ -31,8 +31,20 @@ export default class StoreCookie extends VueAuthStore {
     return this.getCookie(this.options.tokenDefaultName);
   }
 
+  public getRefreshToken(): string {
+    return this.getCookie(this.options.refreshTokenDefaultName);
+  }
+
   public getUser(): AuthUser {
     return this.getCookie(this.options.userDefaultName);
+  }
+
+  public setRefreshToken(refreshToken: string | null): void {
+    if (refreshToken) {
+      this.setCookie(this.options.refreshTokenDefaultName, refreshToken);
+    } else {
+      this.deleteCookie(this.options.refreshTokenDefaultName);
+    }
   }
 
   public setToken(token: string | null): void {
