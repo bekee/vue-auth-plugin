@@ -106,6 +106,7 @@ export default class AuthVueHttp {
         method,
         url,
         headers: { ...this.getAuthHeader(), ...this.getRefreshAuthHeader() },
+        params: { ...this.getRefreshAuthHeader() }
       });
       promise
         .then(async (response: AxiosResponse) => {
