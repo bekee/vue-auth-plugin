@@ -106,7 +106,6 @@ export default class AuthVueHttp {
         method,
         url,
         headers: { ...this.getAuthHeader(), ...this.getRefreshAuthHeader() },
-        params: { ...this.getRefreshAuthHeader() }
       });
       promise
         .then(async (response: AxiosResponse) => {
@@ -211,9 +210,7 @@ export default class AuthVueHttp {
 
   private getRefreshAuthHeader() {
     const { refreshHeaderToken } = this.options || { refreshHeaderToken: 'RefreshTokenAuth' };
-    const { refreshTokenDefaultName } = this.options;
-
-    const token = `${refreshTokenDefaultName}`.trim();
+    const token =  this.storeManager.getRefreshToken();
     return { [refreshHeaderToken]: token };
   }
 }
