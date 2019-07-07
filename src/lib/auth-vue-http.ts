@@ -62,14 +62,25 @@ export default class AuthVueHttp {
         method,
         url,
         headers: { ...this.getAuthHeader() },
+      }).then(() => {
+        this.storeManager.resetAll();
+        if (redirect || forceRedirect) {
+          this.router.push(redirect || '/');
+        }
+      }).catch(() => {
+        this.storeManager.resetAll();
+        if (redirect || forceRedirect) {
+          this.router.push(redirect || '/');
+        }
       });
+    } else {
+      this.storeManager.resetAll();
+      if (redirect || forceRedirect) {
+        this.router.push(redirect || '/');
+      }
     }
     if (this.intervalFetchData) {
       clearInterval(this.intervalFetchData);
-    }
-    this.storeManager.resetAll();
-    if (redirect || forceRedirect) {
-      this.router.push(redirect || '/');
     }
   }
 

@@ -97,8 +97,10 @@ export default class AuthStoreManager extends VueAuthStore {
   public resetAll(): void {
     this.setUser(null);
     this.setToken(null);
+    this.setRefreshToken(null);
     this.options.Vue.$data.user = null;
     this.options.Vue.$data.token = null;
+    this.options.Vue.$data.refreshToken = null;
   }
 
   public check(role?: string | string[]): boolean {
